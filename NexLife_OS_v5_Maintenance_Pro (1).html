@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexLife Premier | Dual-Core Smart Society Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .dashboard-view { transition: all 0.2s ease-in-out; }
+        .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-width: 4px;
+            border-color: #f43f5e; /* Rose accent color */
+        }
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+background:linear-gradient(135deg,#eef2ff,#f8fafc,#ecfeff);
+}
+aside{
+background:linear-gradient(180deg,#0f172a,#1e1b4b,#111827)!important;
+box-shadow:0 0 30px rgba(79,70,229,.25);
+}
+header{
+background:rgba(255,255,255,.9)!important;
+backdrop-filter:blur(14px);
+}
+.bg-white{
+background:rgba(255,255,255,.92)!important;
+backdrop-filter:blur(14px);
+border:1px solid rgba(99,102,241,.12)!important;
+box-shadow:0 12px 35px rgba(99,102,241,.10)!important;
+transition:.25s;
+}
+.bg-white:hover{
+transform:translateY(-4px);
+box-shadow:0 20px 45px rgba(99,102,241,.18)!important;
+}
+.sidebar-link{
+border-radius:14px;
+margin-bottom:6px;
+}
+.sidebar-link:hover{
+background:linear-gradient(90deg,#4338ca,#7c3aed)!important;
+color:#fff!important;
+transform:translateX(4px);
+}
+.sidebar-link.active{
+background:linear-gradient(90deg,#ec4899,#7c3aed)!important;
+border-left:none!important;
+}
+button{
+transition:.25s!important;
+}
+button:hover{
+transform:scale(1.04);
+}
+table thead{
+background:linear-gradient(90deg,#4f46e5,#7c3aed)!important;
+color:white!important;
+}
+input,textarea{
+border-radius:12px!important;
+}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-thumb{background:#6366f1;border-radius:20px}
+</style>
+
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 antialiased h-screen flex overflow-hidden">
+
+    <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0 z-20 h-full border-r border-slate-800">
+        <div class="h-16 flex items-center px-6 gap-3 border-b border-slate-800 bg-slate-950/40">
+            <i class="fa-solid fa-building-shield text-2xl text-rose-500"></i>
+            <div>
+                <h1 class="font-bold text-sm tracking-wide leading-none">NexLife OS</h1>
+                <span class="text-[10px] text-slate-400 font-medium">Smart Society Admin</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <button onclick="app.switchView('overview')" id="lnk-overview" class="sidebar-link active w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-chart-pie w-5 text-slate-400"></i> Control Overview
+            </button>
+            
+            <div class="pt-4 pb-2 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Resident Subsystem</div>
+            <button onclick="app.switchView('residents')" id="lnk-residents" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left bg-indigo-950/20 border border-indigo-900/30">
+                <i class="fa-solid fa-address-book w-5 text-indigo-400"></i> Resident Directory
+            </button>
+
+            
+<button onclick="app.switchView('planner')" id="lnk-planner" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+<i class="fa-solid fa-calendar-check w-5 text-cyan-400"></i> Society Planner
+</button>
+<div class="pt-4 pb-2 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Security Core</div>
+            <button onclick="app.switchView('visitors')" id="lnk-visitors" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-id-badge w-5 text-slate-400"></i> Visitor Desk & Passes
+            </button>
+            <button onclick="app.switchView('guard')" id="lnk-guard" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-qrcode w-5 text-rose-400"></i> Guard Scanner Tool
+            </button>
+            <button onclick="app.switchView('parking')" id="lnk-parking" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-square-parking w-5 text-slate-400"></i> Smart Parking Bay
+            </button>
+            <button onclick="app.switchView('testing')" id="lnk-testing" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-terminal w-5 text-slate-400"></i> Security Test Board
+            </button>
+
+            <div class="pt-4 pb-2 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">Operations</div>
+            <button onclick="app.switchView('complaints')" id="lnk-complaints" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-circle-exclamation w-5 text-slate-400"></i> Complaint Logs
+            </button>
+            <button onclick="app.switchView('bulletins')" id="lnk-bulletins" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-bullhorn w-5 text-slate-400"></i> Notices
+            </button>
+            <button onclick="app.switchView('maintenance')" id="lnk-maintenance" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+<i class="fa-solid fa-wallet w-5 text-amber-400"></i> Maintenance
+</button>
+
+<button onclick="app.switchView('emergency')"  id="lnk-emergency" class="sidebar-link w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-left">
+                <i class="fa-solid fa-phone-flip w-5 text-slate-400"></i> Emergency Hotlines
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950/20 text-xs text-slate-500 flex flex-col gap-1">
+            <div class="flex items-center gap-1.5 font-medium text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Multi-Tenant DB Connected
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0 shadow-xs">
+            <h2 id="currentViewTitle" class="text-lg font-bold text-slate-800">Control Overview Dashboard</h2>
+            <div class="flex items-center gap-4 text-xs font-medium text-slate-500">
+                <div class="bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700">
+                    <i class="fa-solid fa-database mr-1.5 text-indigo-500"></i> Dynamic Sandbox Ledger
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 max-w-6xl w-full mx-auto">
+            
+            <div id="view-overview" class="dashboard-view space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">Occupied Units</span>
+                            <span id="metric-residents" class="text-3xl font-extrabold text-slate-800 block mt-1">0</span>
+                        </div>
+                        <div class="w-12 h-12 bg-indigo-50 rounded-xl text-indigo-600 flex items-center justify-center text-lg"><i class="fa-solid fa-house-user"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">Parking Available</span>
+                            <span id="metric-parking" class="text-3xl font-extrabold text-slate-800 block mt-1">0 Slots</span>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 rounded-xl text-emerald-600 flex items-center justify-center text-lg"><i class="fa-solid fa-square-parking"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">Open Complaints</span>
+                            <span id="metric-complaints" class="text-3xl font-extrabold text-slate-800 block mt-1">0</span>
+                        </div>
+                        <div class="w-12 h-12 bg-amber-50 rounded-xl text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-circle-exclamation"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block">Expected Guests</span>
+                            <span id="metric-expected" class="text-3xl font-extrabold text-slate-800 block mt-1">0</span>
+                        </div>
+                        <div class="w-12 h-12 bg-rose-50 rounded-xl text-rose-600 flex items-center justify-center text-lg"><i class="fa-solid fa-hourglass-half"></i></div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 text-white shadow-md border border-indigo-900">
+                    <span class="bg-indigo-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider mb-3 inline-block">System Upgrade Completed</span>
+                    <h3 class="font-bold text-lg mb-1">NexLife Multi-Tenant Operational Environment</h3>
+                    <p class="text-xs text-indigo-200 max-w-2xl leading-relaxed mt-1">This application includes tracking features for visitor metrics, public parking arrays, and real-world vehicle mapping layouts. Use the left menu sidebar links to switch views instantly.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Weekly Visitor Analytics</h3>
+                    <canvas id="visitorChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <div id="view-residents" class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold mb-4 text-slate-800">Register Existing Household & Vehicle Metadata</h3>
+                    <form id="residentForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Flat No.</label>
+                            <input type="text" id="resFlat" placeholder="e.g. A-401" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Primary Owner Name</label>
+                            <input type="text" id="resName" placeholder="Full Name" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Vehicle Plate No.</label>
+                            <input type="text" id="resCar" placeholder="e.g. GJ-01-XX-1234" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Family Size</label>
+                            <input type="number" id="resMembers" placeholder="Count" min="1" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div class="sm:col-span-4 flex justify-end">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg text-sm transition shadow-sm">
+                                <i class="fa-solid fa-user-plus mr-1.5"></i> Save to Database Directory
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-1">Active Structural Registry</h3>
+                    <p class="text-xs text-slate-400 mb-4">Complete directory mapping unit locations, owners, and secure license plate records.</p>
+                    <div class="overflow-hidden rounded-xl border border-slate-200">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3">Flat Handle</th>
+                                    <th class="p-3">Resident Owner</th>
+                                    <th class="p-3">Registered Vehicle No.</th>
+                                    <th class="p-3">Family Count</th>
+                                    <th class="p-3 text-right">Directory Clean</th>
+                                </tr>
+                            </thead>
+                            <tbody id="residentTableBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            
+
+<div id="view-planner" class="dashboard-view hidden space-y-6">
+
+<div class="rounded-3xl p-8 text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 shadow-2xl relative overflow-hidden">
+<div class="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full"></div>
+<div class="absolute right-20 bottom-0 w-24 h-24 bg-cyan-300/20 rounded-full"></div>
+<h2 class="text-3xl font-extrabold">🗳️ Society Planner</h2>
+<p class="text-indigo-100 mt-2">Create community polls, collect votes and plan society events together.</p>
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div class="bg-gradient-to-br from-white to-indigo-50 rounded-3xl p-6 border border-indigo-200 shadow-xl">
+<h3 class="text-xl font-bold text-indigo-700 mb-4">✨ Create New Poll</h3>
+
+<input id="pollQuestion" class="w-full p-3 mb-3 border rounded-xl" placeholder="Enter Poll Question">
+
+<input id="opt1" class="w-full p-3 mb-2 border rounded-xl" placeholder="Option 1">
+<input id="opt2" class="w-full p-3 mb-2 border rounded-xl" placeholder="Option 2">
+<input id="opt3" class="w-full p-3 mb-2 border rounded-xl" placeholder="Option 3">
+<input id="opt4" class="w-full p-3 mb-4 border rounded-xl" placeholder="Option 4">
+
+<button onclick="app.createPoll()" class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white font-bold shadow-lg hover:scale-105">
+🚀 Create Poll
+</button>
+</div>
+
+<div class="bg-gradient-to-br from-cyan-50 to-white rounded-3xl p-6 border border-cyan-200 shadow-xl">
+<h3 class="text-xl font-bold text-cyan-700 mb-4">📅 Upcoming Event</h3>
+
+<div class="rounded-2xl bg-white p-5 border shadow">
+<h4 class="font-bold text-lg">Weekend Community Trip</h4>
+<p class="text-slate-500 text-sm mt-2">Vote and finalize the destination with all residents.</p>
+
+<div class="mt-4 flex gap-2 flex-wrap">
+<span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs">Vacation</span>
+<span class="px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs">Community</span>
+<span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-700 text-xs">Planning</span>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="bg-white rounded-3xl shadow-xl border p-6">
+<h3 class="text-xl font-bold mb-5 text-slate-800">📊 Live Poll Result</h3>
+<div id="pollArea"></div>
+</div>
+
+</div>
+
+<div id="view-visitors"
+ class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold mb-4 text-slate-800">Pre-Authorize New Visitor Request</h3>
+                    <form id="visitorForm" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Visitor Full Name</label>
+                            <input type="text" id="visitorName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Purpose of Visit</label>
+                            <input type="text" id="visitorPurpose" placeholder="Delivery, Guest, Service" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Your Flat No.</label>
+                            <input type="text" id="visitorFlat" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        </div>
+                        <div class="sm:col-span-3 flex justify-end">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg text-sm transition shadow-sm">
+                                <i class="fa-solid fa-square-plus mr-1.5"></i> Register Visitor Pass & Generate QR
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold mb-4 text-slate-800">Pre-Registered Digital Passes Portfolio</h3>
+                    <div id="gatePassContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
+            <div id="view-guard" class="dashboard-view hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200 md:col-span-1 flex flex-col items-center text-center justify-between min-h-[340px]">
+                        <div class="w-full">
+                            <h3 class="text-base font-bold text-slate-800">Optical Security Camera Terminal</h3>
+                            <p class="text-xs text-slate-400 mt-1">Simulates real-time hardware scanning of entry passes at the main gate.</p>
+                        </div>
+                        
+                        <div class="w-44 h-44 bg-slate-950 rounded-2xl border-4 border-slate-800 flex flex-col items-center justify-center relative overflow-hidden my-4 group shadow-inner">
+                            <div class="absolute inset-0 border-2 border-rose-500/30 m-4 rounded animate-pulse"></div>
+                            <div id="laserScannerLine" class="absolute top-0 left-0 right-0 h-1 bg-rose-500 shadow-[0_0_12px_#f43f5e] animate-[bounce_2s_infinite]"></div>
+                            <i class="fa-solid fa-camera text-slate-700 text-3xl group-hover:text-rose-500/40 transition"></i>
+                            <span class="text-[9px] font-mono text-slate-500 mt-2 tracking-widest uppercase">Awaiting Code Badge</span>
+                        </div>
+
+                        <p class="text-xs text-slate-500 font-medium bg-slate-100 px-4 py-2 rounded-xl border border-slate-200 w-full">
+                            💡 <span class="text-slate-700">Click <b>"Scan Pass"</b> inside the Visitor Desk or Actions column to process validation logs here.</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200 md:col-span-2">
+                        <h3 class="text-base font-bold text-slate-800 mb-1">Live Queue Stream Terminal (Main Perimeter Gate)</h3>
+                        <p class="text-xs text-slate-400 mb-4">Real-time authentication buffer ledger listing pending and approved entries.</p>
+                        <div class="overflow-hidden rounded-xl border border-slate-200">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Pass Handle</th>
+                                        <th class="p-3">Visitor Name</th>
+                                        <th class="p-3">Target Flat</th>
+                                        <th class="p-3">Verification State</th>
+                                        <th class="p-3 text-right">Gate Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="guardScannerTableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-parking" class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Automated Smart Parking Matrix</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Click any free bay unit container to bind allocations natively.</p>
+                        </div>
+                        <div class="flex gap-4 text-xs font-medium">
+                            <span class="flex items-center gap-1.5 text-slate-600"><span class="w-3 h-3 bg-emerald-100 border border-emerald-300 rounded"></span> Available</span>
+                            <span class="flex items-center gap-1.5 text-slate-600"><span class="w-3 h-3 bg-rose-500 rounded"></span> Occupied</span>
+                        </div>
+                    </div>
+                    <div id="parkingGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4"></div>
+                </div>
+            </div>
+
+            <div id="view-testing" class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-2">Simulate System Alarms</h3>
+                    <p class="text-xs text-slate-500 mb-6">Inject sandbox interrupt loops to evaluate standard system responsiveness behaviors.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button onclick="app.triggerSecurityTest('Fire Alarm Drill activated. Evacuation sirens operational.')" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 p-4 rounded-xl text-left transition flex items-start gap-3 pointer-events-auto cursor-pointer">
+                            <div class="p-2.5 bg-rose-600 text-white rounded-lg"><i class="fa-solid fa-fire-extinguisher"></i></div>
+                            <div>
+                                <span class="font-bold text-sm text-rose-800 block">Fire Alarm Drill</span>
+                                <span class="text-xs text-rose-600 block mt-0.5">Test master evacuation loops.</span>
+                            </div>
+                        </button>
+                        <button onclick="app.triggerSecurityTest('Main Gate Lockdown initialized. All access points secured.')" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 p-4 rounded-xl text-left transition flex items-start gap-3 pointer-events-auto cursor-pointer">
+                            <div class="p-2.5 bg-amber-600 text-white rounded-lg"><i class="fa-solid fa-lock"></i></div>
+                            <div>
+                                <span class="font-bold text-sm text-amber-800 block">Force Perimeter Lock</span>
+                                <span class="text-xs text-amber-600 block mt-0.5">Secure peripheral perimeter blocks.</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="mt-6">
+                        <span class="text-xs font-bold text-slate-500 uppercase block mb-2">Output Telemetry Log Stream Console</span>
+                        <div class="bg-slate-900 border border-slate-950 rounded-xl p-4 text-xs font-mono text-emerald-400 h-40 overflow-y-auto" id="securityConsole">
+                            [SYSTEM] Security diagnostic subroutines initialized online. Ready...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-complaints" class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">File a Resident Complaint Ticket</h3>
+                    <form id="complaintForm" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Issue Subject Title</label>
+                                <input type="text" id="complaintTitle" placeholder="e.g. Corridor Light Malfunction" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Reporting Unit No.</label>
+                                <input type="text" id="complaintFlat" placeholder="e.g. A-101" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Description</label>
+                            <textarea id="complaintDesc" rows="3" placeholder="Explain the structural/operational maintenance defect..." required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600"></textarea>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-6 rounded-lg text-sm transition shadow-sm cursor-pointer">
+                                Submit Formal Complaint Ticket
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">Logged Structural Defect Reports</h3>
+                    <div id="complaintList" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <div id="view-bulletins" class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-2">Publish Global Executive Bulletin</h3>
+                    <p class="text-xs text-slate-500 mb-4">Propagate alerts directly to public user community streams instantly.</p>
+                    <div class="space-y-3 max-w-xl">
+                        <input type="text" id="bulletinText" placeholder="Type statement array entry..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-indigo-600">
+                        <div class="flex gap-2">
+                            <button onclick="app.addBulletin('Notice')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-4 rounded-lg transition shadow-xs cursor-pointer">
+                                + Broadcast General Notice
+                            </button>
+                            <button onclick="app.addBulletin('Maintenance')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold py-2 px-4 rounded-lg transition shadow-xs cursor-pointer">
+                                + Broadcast Maintenance Alert
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">Active Public Dashboard Timelines</h3>
+                    <div id="bulletinFeed" class="space-y-3"></div>
+                </div>
+            </div>
+
+            
+<div id="view-maintenance" class="dashboard-view hidden space-y-6">
+<div class="bg-white p-6 rounded-3xl shadow-xl">
+<h2 class="text-2xl font-bold mb-4">💰 Maintenance Dashboard</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+<div class="bg-indigo-50 p-4 rounded-xl"><div class="text-xs text-slate-500">Total Collection</div><div id="mtCollected" class="text-2xl font-bold text-indigo-700">₹0</div></div>
+<div class="bg-red-50 p-4 rounded-xl"><div class="text-xs text-slate-500">Total Due</div><div id="mtDue" class="text-2xl font-bold text-red-600">₹0</div></div>
+<div class="bg-amber-50 p-4 rounded-xl"><div class="text-xs text-slate-500">Pending Flats</div><div id="mtPending" class="text-2xl font-bold text-amber-600">0</div></div>
+<div class="bg-emerald-50 p-4 rounded-xl"><div class="text-xs text-slate-500">Paid Flats</div><div id="mtPaid" class="text-2xl font-bold text-emerald-600">0</div></div>
+</div>
+
+<div class="flex gap-3 mb-5">
+<input id="mtSearch" onkeyup="app.renderMaintenance()" placeholder="Search Flat..." class="border rounded-xl px-4 py-2 w-60">
+<button onclick="app.addMaintenance()" class="bg-indigo-600 text-white px-4 rounded-xl">+ Add Maintenance</button>
+</div>
+<p class="text-slate-500 mb-5">Track pending maintenance dues for every flat.</p>
+<table class="w-full text-sm rounded-xl overflow-hidden">
+<thead>
+<tr><th class="p-3">Flat</th><th>Resident</th><th>Total</th><th>Paid</th><th>Due</th><th>Status</th></tr>
+</thead>
+<tbody id="maintenanceTable"></tbody>
+</table>
+</div>
+</div>
+
+<div id="view-emergency"
+ class="dashboard-view hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-1">Emergency Speed Dial Directory</h3>
+                    <p class="text-xs text-slate-500 mb-6">Direct structural telephone terminal link access matrix nodes.</p>
+                    
+<div class="mb-6 text-center">
+<button id="sosBtn" class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-bold text-lg">
+🆘 HOLD 6 SECONDS FOR SOS
+</button>
+<p class="text-xs text-slate-500 mt-2">Press and hold for 6 seconds to trigger an emergency alert.</p>
+<div id="sosStatus" class="mt-3 font-bold text-red-600"></div>
+</div>
+<div id="emergencyContacts" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+<div id="activeSOS" class="mt-6"></div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        class SmartSocietyEngine {
+            constructor() {
+                // Initialize state from local storage or set structured default datasets
+                this.state = JSON.parse(localStorage.getItem('society_state_v3')) || {
+                    residents: [
+                        { flat: 'A-101', name: 'Sujal Singh', car: 'GJ-03-CR-9912', members: 3 },
+                        { flat: 'B-304', name: 'Nikhil Sharma', car: 'MH-12-AB-4567', members: 4 },
+                        { flat: 'C-502', name: 'Anoop Kumar', car: 'DL-01-CA-1102', members: 2 }
+                    ],
+                    visitors: [
+                        { id: 'PAS-7721', name: 'Rohan Verma', purpose: 'Swiggy Delivery', flat: 'C-502', time: '12:40 PM', status: 'Checked In' },
+                        { id: 'PAS-3392', name: 'Dr. Priya Mehta', purpose: 'Family Guest', flat: 'A-101', time: '02:15 PM', status: 'Expected' }
+                    ],
+                    parkingSlots: Array.from({ length: 8 }, (_, i) => ({ id: `P-${101 + i}`, booked: i % 3 === 0, flat: i % 3 === 0 ? `B-${201 + i}` : null })),
+                    complaints: [
+                        { id: 1, title: 'Basement Light Flickering', flat: 'Block-A', desc: 'The tube light near parking slot 102 flashes constantly.', status: 'Pending' }
+                    ],
+                    bulletins: [
+                        { type: 'Notice', text: 'Society elevator inspection routine checks scheduled tomorrow.', date: 'Today' },
+                        { type: 'Maintenance', text: 'Overhead residential water tanks cleaning operations ongoing.', date: 'Today' }
+                    ]
+                };
+
+                this.emergencyContacts = [
+                    { role: 'Head Guard Terminal', name: 'Commander Singh', phone: '+91 98765 43210', icon: 'fa-user-shield' },
+                    { role: 'Main Gate Desk', name: 'Guard Duty Shift B', phone: '+91 98765 43211', icon: 'fa-door-open' },
+                    { role: 'Security Council Office', name: 'Omkar Secretariat', phone: '+91 88888 77777', icon: 'fa-building-columns' },
+                    { role: 'Society General Manager', name: 'Mr. Vivek Anand', phone: '+91 99999 11111', icon: 'fa-user-tie' }
+                ];
+
+                this.initEventBindings();
+                this.renderAll();
+                this.updateMetrics();
+                this.drawVisitorChart();
+            }
+
+            saveState() {
+                localStorage.setItem('society_state_v3', JSON.stringify(this.state));
+                this.updateMetrics();
+            }
+
+            switchView(viewId) {
+                document.querySelectorAll('.dashboard-view').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+                document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+                document.getElementById(`lnk-${viewId}`).classList.add('active');
+
+                const friendlyTitles = {
+                    overview: "Control Overview Dashboard",
+                    residents: "Resident Directory & Vehicle Database Registry",
+                    visitors: "Visitor Desk & Entry Management Panels",
+                    guard: "Security Gate QR Scanner Simulation Engine",
+                    parking: "Smart Bay Parking Workspace Layout",
+                    testing: "Security Signal Test Board Matrix",
+                    complaints: "Operations Complaint Core Tracking Logs",
+                    bulletins: "Notices Broadcast Streams",
+                    planner:"Society Planner & Poll System", maintenance:"Maintenance Dashboard", emergency: "Emergency Telephony Speed Dial Directory"
+                };
+                document.getElementById('currentViewTitle').innerText = friendlyTitles[viewId] || "Control Panel";
+                
+                // Re-trigger instant layouts if elements require size calculations (like QR refreshes)
+                if (viewId === 'visitors') { this.renderVisitorPasses(); }
+            }
+
+            initEventBindings() {
+                // Resident Form submission handler
+                document.getElementById('residentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const flat = document.getElementById('resFlat').value.trim();
+                    const name = document.getElementById('resName').value.trim();
+                    const car = document.getElementById('resCar').value.trim();
+                    const members = parseInt(document.getElementById('resMembers').value, 10);
+
+                    this.state.residents.push({ flat, name, car, members });
+                    this.saveState();
+                    this.renderResidents();
+                    document.getElementById('residentForm').reset();
+                });
+
+                // Visitor Pass Form handler
+                document.getElementById('visitorForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('visitorName').value.trim();
+                    const purpose = document.getElementById('visitorPurpose').value.trim();
+                    const flat = document.getElementById('visitorFlat').value.trim();
+                    const id = `PAS-${Math.floor(1000 + Math.random() * 9000)}`;
+                    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    this.state.visitors.push({ id, name, purpose, flat, time, status: 'Expected' });
+                    this.saveState();
+                    this.renderVisitorPasses();
+                    this.renderGuardTable();
+                    document.getElementById('visitorForm').reset();
+                });
+
+                // Complaint Ticket handler
+                document.getElementById('complaintForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('complaintTitle').value.trim();
+                    const flat = document.getElementById('complaintFlat').value.trim();
+                    const desc = document.getElementById('complaintDesc').value.trim();
+                    const id = this.state.complaints.length + 1;
+
+                    this.state.complaints.push({ id, title, flat, desc, status: 'Pending' });
+                    this.saveState();
+                    this.renderComplaints();
+                    document.getElementById('complaintForm').reset();
+                });
+            }
+
+            updateMetrics() {
+                document.getElementById('metric-residents').innerText = this.state.residents.length;
+                const freeParkingSlots = this.state.parkingSlots.filter(s => !s.booked).length;
+                document.getElementById('metric-parking').innerText = `${freeParkingSlots} Slots`;
+                document.getElementById('metric-complaints').innerText = this.state.complaints.filter(c => c.status === 'Pending').length;
+                document.getElementById('metric-expected').innerText = this.state.visitors.filter(v => v.status === 'Expected').length;
+            }
+
+            renderAll() {
+                this.renderResidents();
+                this.renderVisitorPasses();
+                this.renderGuardTable();
+                this.renderParkingGrid();
+                this.renderComplaints();
+                this.renderBulletins();
+                this.renderEmergencyDirectory();
+            }
+
+            renderResidents() {
+                const tbody = document.getElementById('residentTableBody');
+                tbody.innerHTML = '';
+                this.state.residents.forEach((res, index) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition';
+                    tr.innerHTML = `
+                        <td class="p-3 font-semibold text-slate-700">${res.flat}</td>
+                        <td class="p-3 font-medium text-slate-900">${res.name}</td>
+                        <td class="p-3 font-mono text-slate-600">${res.car}</td>
+                        <td class="p-3 text-slate-500">${res.members} Pax</td>
+                        <td class="p-3 text-right">
+                            <button onclick="app.deleteResident(${index})" class="text-rose-500 hover:text-rose-700 font-bold px-2 py-1 rounded cursor-pointer">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            deleteResident(index) {
+                this.state.residents.splice(index, 1);
+                this.saveState();
+                this.renderResidents();
+            }
+
+            renderVisitorPasses() {
+                const container = document.getElementById('gatePassContainer');
+                container.innerHTML = '';
+                
+                this.state.visitors.forEach((vis) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-xs relative overflow-hidden';
+                    
+                    // Distinct background treatments for checking state
+                    const checkedIn = vis.status === 'Checked In';
+                    const badgeColor = checkedIn ? 'bg-emerald-500 text-white' : 'bg-amber-400 text-slate-900';
+                    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono">${vis.id}</span>
+                                <h4 class="font-bold text-sm text-slate-800 leading-tight mt-0.5">${vis.name}</h4>
+                                <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-circle font-xs text-[7px] mr-1 align-middle text-slate-400"></i> ${vis.purpose}</p>
+                            </div>
+                            <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full ${badgeColor}">${vis.status}</span>
+                        </div>
+                        <div class="border-t border-dashed border-slate-200 pt-3 flex items-center justify-between gap-2 mt-auto">
+                            <div>
+                                <span class="block text-[9px] text-slate-400 uppercase font-bold">Destination</span>
+                                <span class="text-xs font-bold text-indigo-600">Flat ${vis.flat}</span>
+                            </div>
+                            <div id="qr-${vis.id}" class="w-16 h-16 bg-white p-0.5 border border-slate-200 rounded"></div>
+                        </div>
+                        ${!checkedIn ? `
+                        <button onclick="app.scanPass('${vis.id}')" class="w-full mt-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold py-1.5 rounded-lg text-xs transition tracking-wide flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-qrcode text-[10px]"></i> Scan Pass Code
+                        </button>` : ''}
+                    `;
+                    
+                    container.appendChild(card);
+                    
+                    // Fire generation framework library safely
+                    setTimeout(() => {
+                        const qrElement = document.getElementById(`qr-${vis.id}`);
+                        if (qrElement) {
+                            qrElement.innerHTML = '';
+                            new QRCode(qrElement, { text: vis.id, width: 60, height: 60, correctLevel: QRCode.CorrectLevel.M });
+                        }
+                    }, 20);
+                });
+            }
+
+            renderGuardTable() {
+                const tbody = document.getElementById('guardScannerTableBody');
+                tbody.innerHTML = '';
+                this.state.visitors.forEach((vis) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+                    
+                    const isChecked = vis.status === 'Checked In';
+                    const statusMarkup = isChecked 
+                        ? `<span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Checked In</span>`
+                        : `<span class="text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200 flex items-center gap-1 w-max"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Expected</span>`;
+
+                    tr.innerHTML = `
+                        <td class="p-3 font-mono font-bold text-slate-400">${vis.id}</td>
+                        <td class="p-3 font-semibold text-slate-800">${vis.name} <span class="block text-[10px] font-normal text-slate-400">${vis.purpose}</span></td>
+                        <td class="p-3 font-medium text-indigo-600">${vis.flat}</td>
+                        <td class="p-3">${statusMarkup}</td>
+                        <td class="p-3 text-right">
+                            ${!isChecked ? `
+                            <button onclick="app.scanPass('${vis.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold py-1 px-3 rounded text-[11px] border border-indigo-200 transition cursor-pointer">
+                                Scan Pass
+                            </button>` : `<span class="text-xs text-slate-400 font-medium">Logged ${vis.time}</span>`}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            scanPass(passId) {
+                const visitor = this.state.visitors.find(v => v.id === passId);
+                if (visitor && visitor.status !== 'Checked In') {
+                    visitor.status = 'Checked In';
+                    visitor.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    this.saveState();
+                    this.renderVisitorPasses();
+                    this.renderGuardTable();
+                    
+                    // Propagate simulation onto the telemetry console
+                    this.logTelemetry(`[AUTHENTICATION SUCCESS] ${visitor.id} authorized for Entry. Visitor Name: ${visitor.name}. Target Node Unit: ${visitor.flat}. Status set verified.`);
+                    
+                    // Auto switch screen layout frame to show guard action visualization
+                    this.switchView('guard');
+                }
+            }
+
+            renderParkingGrid() {
+                const grid = document.getElementById('parkingGrid');
+                grid.innerHTML = '';
+                this.state.parkingSlots.forEach((slot) => {
+                    const card = document.createElement('div');
+                    card.className = slot.booked 
+                        ? 'bg-rose-50 border border-rose-200 p-4 rounded-xl flex flex-col justify-between relative shadow-2xs h-28'
+                        : 'bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 p-4 rounded-xl flex flex-col justify-between transition cursor-pointer shadow-2xs h-28';
+                    
+                    card.onclick = () => { if (!slot.booked) this.promptBookParking(slot.id); };
+                    
+                    card.innerHTML = slot.booked 
+                        ? `
+                            <div class="flex justify-between items-start">
+                                <span class="font-mono font-bold text-rose-700 text-sm">${slot.id}</span>
+                                <span class="text-[9px] bg-rose-600 text-white font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Occupied</span>
+                            </div>
+                            <div class="mt-auto">
+                                <span class="block text-[10px] font-bold text-rose-800 leading-none">${slot.flat}</span>
+                                <span onclick="event.stopPropagation(); app.releaseParking('${slot.id}')" class="text-[9px] text-rose-500 underline font-medium hover:text-rose-700 block mt-1 cursor-pointer">Release Bay</span>
+                            </div>
+                          `
+                        : `
+                            <div class="flex justify-between items-start">
+                                <span class="font-mono font-bold text-emerald-700 text-sm">${slot.id}</span>
+                                <span class="text-[9px] bg-emerald-600 text-white font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Free</span>
+                            </div>
+                            <span class="block text-[10px] text-emerald-600 font-medium mt-auto"><i class="fa-solid fa-circle-plus mr-1"></i>Assign Allocation</span>
+                          `;
+                    grid.appendChild(card);
+                });
+            }
+
+            promptBookParking(slotId) {
+                const targetFlat = prompt(`Enter structural context Flat Number assignment allocation for parking bay ${slotId}:`, "A-101");
+                if (targetFlat) {
+                    const slot = this.state.parkingSlots.find(s => s.id === slotId);
+                    if (slot) {
+                        slot.booked = true;
+                        slot.flat = targetFlat;
+                        this.saveState();
+                        this.renderParkingGrid();
+                        this.logTelemetry(`[PARKING STATE ALTERED] Slot ${slotId} linked to Resident Household ${targetFlat}.`);
+                    }
+                }
+            }
+
+            releaseParking(slotId) {
+                const slot = this.state.parkingSlots.find(s => s.id === slotId);
+                if (slot) {
+                    slot.booked = false;
+                    slot.flat = null;
+                    this.saveState();
+                    this.renderParkingGrid();
+                    this.logTelemetry(`[PARKING STATE ALTERED] Slot ${slotId} state cleared to operational pool.`);
+                }
+            }
+
+            renderComplaints() {
+                const list = document.getElementById('complaintList');
+                list.innerHTML = '';
+                if (this.state.complaints.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-slate-400 font-medium">No open system operational complaints listed currently.</p>`;
+                    return;
+                }
+                this.state.complaints.forEach((comp) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-4 rounded-xl border bg-slate-50 border-slate-200 flex flex-col sm:flex-row justify-between sm:items-center gap-3 text-xs';
+                    card.innerHTML = `
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-slate-800 text-sm">${comp.title}</span>
+                                <span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px]">Flat ${comp.flat}</span>
+                            </div>
+                            <p class="text-slate-500 leading-relaxed">${comp.desc}</p>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+                            <span class="font-bold font-mono px-2 py-1 rounded bg-amber-100 text-amber-800 border border-amber-200">${comp.status}</span>
+                            <button onclick="app.resolveComplaint(${comp.id})" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-1.5 px-3 rounded-lg transition cursor-pointer">
+                                Mark Resolved
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            }
+
+            resolveComplaint(id) {
+                this.state.complaints = this.state.complaints.filter(c => c.id !== id);
+                this.saveState();
+                this.renderComplaints();
+                this.logTelemetry(`[OPERATIONS COMPLAINT LOGGED] Closed resolved ticket sequence ID: ${id}.`);
+            }
+
+            addBulletin(type) {
+                const textInput = document.getElementById('bulletinText');
+                const text = textInput.value.trim();
+                if (!text) return;
+
+                this.state.bulletins.unshift({ type, text, date: 'Just Now' });
+                this.saveState();
+                this.renderBulletins();
+                textInput.value = '';
+            }
+
+            renderBulletins() {
+                const feed = document.getElementById('bulletinFeed');
+                feed.innerHTML = '';
+                this.state.bulletins.forEach((bul) => {
+                    const isNotice = bul.type === 'Notice';
+                    const classes = isNotice ? 'bg-indigo-50 border-indigo-200 text-indigo-900' : 'bg-amber-50 border-amber-200 text-amber-900';
+                    const icon = isNotice ? 'fa-bullhorn text-indigo-600' : 'fa-triangle-exclamation text-amber-600';
+
+                    const item = document.createElement('div');
+                    item.className = `p-4 border rounded-xl flex items-start gap-3 text-xs ${classes}`;
+                    item.innerHTML = `
+                        <i class="fa-solid ${icon} mt-0.5 text-base"></i>
+                        <div>
+                            <span class="font-extrabold uppercase text-[10px] tracking-wider block opacity-70">${bul.type}</span>
+                            <p class="font-medium mt-0.5 leading-relaxed">${bul.text}</p>
+                        </div>
+                    `;
+                    feed.appendChild(item);
+                });
+            }
+
+            renderEmergencyDirectory() {
+                const container = document.getElementById('emergencyContacts');
+                container.innerHTML = '';
+                this.emergencyContacts.forEach((contact) => {
+                    const block = document.createElement('div');
+                    block.className = 'bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-center gap-4 text-xs';
+                    block.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-sm shrink-0">
+                            <i class="fa-solid ${contact.icon}"></i>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-400 uppercase font-bold leading-none mb-1">${contact.role}</span>
+                            <span class="block font-bold text-slate-800 text-sm">${contact.name}</span>
+                            <span class="block font-mono text-slate-600 font-semibold mt-0.5 text-xs"><i class="fa-solid fa-phone mr-1 text-[10px] text-slate-400"></i> ${contact.phone}</span>
+                        </div>
+                    `;
+                    container.appendChild(block);
+                });
+            }
+
+            triggerSecurityTest(signalPayload) {
+                this.logTelemetry(`[SECURITY SANDBOX INTERRUPT] ${signalPayload}`);
+            }
+
+            logTelemetry(msg) {
+                const consoleEl = document.getElementById('securityConsole');
+                const stamp = new Date().toISOString().split('T')[1].substring(0, 8);
+                consoleEl.innerHTML += `<br>[${stamp}] ${msg}`;
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            }
+        }
+
+        // Standard global orchestrator activation sequence
+        
+        SmartSocietyEngine.prototype.drawVisitorChart=function(){
+            const c=document.getElementById('visitorChart');
+            if(!c||typeof Chart==='undefined') return;
+            if(this._chart) this._chart.destroy();
+            this._chart=new Chart(c,{
+                type:'bar',
+                data:{
+                    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+                    datasets:[{
+                        data:[8,5,9,4,7,10,3],
+                        backgroundColor:'#4f46e5',
+                        borderRadius:8
+                    }]
+                },
+                options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+            });
+        };
+
+
+SmartSocietyEngine.prototype.createPoll=function(){
+ const q=document.getElementById('pollQuestion').value;
+ const opts=[opt1.value,opt2.value,opt3.value,opt4.value].filter(Boolean);
+ if(!q||opts.length<2){alert('Enter question and at least 2 options');return;}
+ const poll={question:q,options:opts,votes:new Array(opts.length).fill(0)};
+ localStorage.setItem('society_poll',JSON.stringify(poll));
+ this.renderPoll();
+};
+SmartSocietyEngine.prototype.votePoll=function(i){
+ let p=JSON.parse(localStorage.getItem('society_poll'));
+ p.votes[i]++; localStorage.setItem('society_poll',JSON.stringify(p)); this.renderPoll();
+};
+SmartSocietyEngine.prototype.renderPoll=function(){
+ const a=document.getElementById('pollArea'); if(!a)return;
+ let p=JSON.parse(localStorage.getItem('society_poll'));
+ if(!p){a.innerHTML='<p class="text-slate-500">No poll created.</p>';return;}
+ let h='<h3 class="font-bold mb-3">'+p.question+'</h3>';
+ const total=p.votes.reduce((a,b)=>a+b,0)||1;
+p.options.forEach((o,i)=>{
+let per=Math.round((p.votes[i]/total)*100);
+h+=`<div class="mb-5">
+<div class="flex justify-between mb-1">
+<span class="font-semibold">${o}</span>
+<span class="text-indigo-600 font-bold">${p.votes[i]} Votes</span>
+</div>
+<div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-3 rounded-full bg-gradient-to-r from-indigo-600 to-fuchsia-600" style="width:${per}%"></div>
+</div>
+<div class="mt-2 text-right">
+<button onclick="app.votePoll(${i})" class="px-4 py-2 rounded-xl text-white bg-gradient-to-r from-cyan-500 to-indigo-600">Vote</button>
+</div>
+</div>`;
+});
+ a.innerHTML=h;
+};
+
+
+SmartSocietyEngine.prototype.initSOS=function(){
+ const btn=document.getElementById('sosBtn');
+ if(!btn) return;
+ let timer;
+ const trigger=()=>{
+   const resident=this.state.residents[0];
+   resident.emergency=true;
+   this.saveState();
+   this.renderResidents();
+   const box=document.getElementById('activeSOS');
+   box.innerHTML=`<div class="bg-red-100 border border-red-400 rounded-xl p-4">
+   <h3 class="font-bold text-red-700">🚨 ACTIVE SOS ALERT</h3>
+   <p><b>${resident.name}</b> (${resident.flat}) needs immediate help.</p>
+   </div>`;
+   document.getElementById('sosStatus').innerHTML='SOS SENT SUCCESSFULLY';
+   alert('Emergency Alert Sent!');
+ };
+ btn.onmousedown=btn.ontouchstart=()=>{timer=setTimeout(trigger,6000);};
+ btn.onmouseup=btn.onmouseleave=btn.ontouchend=()=>clearTimeout(timer);
+};
+const _oldRender=SmartSocietyEngine.prototype.renderResidents;
+SmartSocietyEngine.prototype.renderResidents=function(){
+ _oldRender.call(this);
+ const rows=document.querySelectorAll('#residentTableBody tr');
+ this.state.residents.forEach((r,i)=>{
+   if(r.emergency){
+     rows[i].children[1].innerHTML=`${r.name} <span style="background:#dc2626;color:#fff;padding:2px 6px;border-radius:6px;font-size:10px;margin-left:6px;">EMERGENCY NEED</span>`;
+   }
+ });
+};
+
+
+SmartSocietyEngine.prototype.renderMaintenance=function(){
+const tb=document.getElementById('maintenanceTable'); if(!tb)return;
+const q=(document.getElementById('mtSearch')?.value||'').toLowerCase();
+tb.innerHTML='';
+let col=0,due=0,paid=0,pending=0;
+this.state.residents.forEach((r,i)=>{
+if(!r.maintenance)r.maintenance={type:'Monthly',total:2000,paid:1000,dueDate:'10 Jul'};
+if(q && !r.flat.toLowerCase().includes(q) && !r.name.toLowerCase().includes(q))return;
+let d=r.maintenance.total-r.maintenance.paid;
+col+=r.maintenance.paid; due+=d;
+if(d>0)pending++; else paid++;
+tb.innerHTML+=`<tr class="border-b hover:bg-slate-50">
+<td class="p-3">${r.flat}</td>
+<td>${r.name}</td>
+<td>${r.maintenance.type}<br><span class="text-xs text-slate-400">Due: ${r.maintenance.dueDate}</span></td>
+<td>₹${r.maintenance.total}</td>
+<td class="text-green-600">₹${r.maintenance.paid}</td>
+<td class="${d>0?'text-red-600':'text-green-600'} font-bold">₹${d}</td>
+<td><button onclick="app.editMaintenance(${i})" class="bg-indigo-600 text-white px-2 py-1 rounded">Edit</button>
+<button onclick="app.payNow(${i})" class="bg-emerald-600 text-white px-2 py-1 rounded ml-1">Pay</button></td></tr>`;
+});
+document.getElementById('mtCollected').innerText='₹'+col;
+document.getElementById('mtDue').innerText='₹'+due;
+document.getElementById('mtPending').innerText=pending;
+document.getElementById('mtPaid').innerText=paid;
+this.saveState();
+};
+SmartSocietyEngine.prototype.addMaintenance=function(){
+const flat=prompt('Flat Number'); if(!flat)return;
+const r=this.state.residents.find(x=>x.flat===flat); if(!r){alert('Flat not found');return;}
+const type=prompt('Type','Monthly');
+const total=parseInt(prompt('Total',2000));
+const paid=parseInt(prompt('Paid',0));
+const dd=prompt('Due Date','10 Jul');
+r.maintenance={type:type,total:total,paid:paid,dueDate:dd};
+this.saveState(); this.renderMaintenance();
+};
+SmartSocietyEngine.prototype.payNow=function(i){
+this.state.residents[i].maintenance.paid=this.state.residents[i].maintenance.total;
+this.saveState(); this.renderMaintenance();
+};
+const _renderAll=SmartSocietyEngine.prototype.renderAll;
+SmartSocietyEngine.prototype.renderAll=function(){
+ _renderAll.call(this);
+ this.renderMaintenance();
+};
+
+const app = new SmartSocietyEngine();
+app.initSOS();
+app.renderPoll();
+    </script>
+</body>
+</html>
